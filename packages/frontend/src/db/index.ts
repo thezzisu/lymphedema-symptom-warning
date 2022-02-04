@@ -3,22 +3,40 @@ import { Answer } from '@/core/predict'
 
 export interface IPredictRecord {
   localId: number
+  id: string
   prob: number
-  date: number
+  ts: number
   answer: Answer
+  synced: boolean
+}
+
+export type OperationPayloadMapper = {
+  deletePredictRecord: { id: string }
+}
+
+export type OperationType = keyof OperationPayloadMapper
+
+export interface IOperationRecord<T extends OperationType = never> {
+  localId: number
+  type: T
+  payload: OperationPayloadMapper[T]
+  ts: number
   synced: boolean
 }
 
 class AppDatabase extends Dexie {
   static DB_VERSION = 1
   predictRecords: Dexie.Table<IPredictRecord, number>
+  operationRecords: Dexie.Table<IOperationRecord, number>
 
   constructor() {
     super('AppDatabase')
     this.version(AppDatabase.DB_VERSION).stores({
-      predictRecords: '++localId, prob, date, answer, synced'
+      predictRecords: '++localId, id, prob, ts, answer, synced',
+      operationRecords: '++localId, type, payload, ts, synced'
     })
     this.predictRecords = this.table('predictRecords')
+    this.operationRecords = this.table('operationRecords')
   }
 }
 
@@ -33,18 +51,45 @@ export async function getPredictRecord(
 }
 
 export async function getPredictRecords(): Promise<IPredictRecord[]> {
-  return await db.predictRecords.orderBy('date').reverse().toArray()
+  return await db.predictRecords.orderBy('ts').reverse().toArray()
 }
 
 export async function addPredictRecord(
   prob: number,
-  date: number,
+  ts: number,
   answer: Answer
 ): Promise<number> {
+  const record: Omit<IPredictRecord, 'localId'> = {
+    id: '',
+    prob,
+    ts,
+    answer,
+    synced: false
+  }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return await db.predictRecords.put({ prob, date, answer } as any)
+  return await db.predictRecords.put(record as any)
 }
 
 export async function removePredictRecord(localId: number): Promise<void> {
-  await db.predictRecords.delete(localId)
+  const record = await getPredictRecord(localId)
+  if (record) {
+    if (record.id) {
+      await addOperationRecord('deletePredictRecord', { id: record.id })
+    }
+    await db.predictRecords.delete(localId)
+  }
+}
+
+export async function addOperationRecord<T extends OperationType>(
+  type: T,
+  payload: OperationPayloadMapper[T]
+) {
+  const record: Omit<IOperationRecord<T>, 'localId'> = {
+    type,
+    payload,
+    ts: Date.now(),
+    synced: false
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return await db.operationRecords.put(record as any)
 }

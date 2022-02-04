@@ -47,7 +47,7 @@ const recordPerDay = [...new Array(7)].map((_, i) => {
   const start = +days[i]
   const end = start + MS_PER_DAY
   return records
-    .filter((r: any) => r.date >= start && r.date < end)
+    .filter((r) => r.ts >= start && r.ts < end)
     .sort((l, r) => r.prob - l.prob)[0]
 })
 const weekdays = '日一二三四五六'

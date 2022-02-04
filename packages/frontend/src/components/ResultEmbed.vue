@@ -21,5 +21,5 @@ const { record } = defineProps<{
 const recordClass = probToClass(record.prob)
 const label = classToLabel(recordClass)
 const color = classToColor(recordClass)
-const time = new Date(record.date).toLocaleString()
+const time = new Date(record.ts).toLocaleString()
 </script>
