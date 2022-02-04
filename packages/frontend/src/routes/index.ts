@@ -5,6 +5,9 @@ import Result from '@/pages/Result.vue'
 import Articles from '@/pages/Articles.vue'
 import Article from '@/pages/Article.vue'
 import Account from '@/pages/Account.vue'
+import Login from '@/pages/Login.vue'
+import Register from '@/pages/Register.vue'
+import NotFound from '@/pages/NotFound.vue'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -40,6 +43,21 @@ const router = createRouter({
       name: 'account',
       path: '/account',
       component: Account
+    },
+    {
+      name: 'login',
+      path: '/login',
+      component: Login
+    },
+    {
+      name: 'register',
+      path: '/register',
+      component: Register
+    },
+    {
+      name: 'notFound',
+      path: '/:pathMatch(.*)*',
+      component: NotFound
     }
   ]
 })
