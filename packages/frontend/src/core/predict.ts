@@ -87,3 +87,66 @@ export async function predict(data: Answer): Promise<number> {
   }
   return sigmoid(sum + intercept)
 }
+
+export enum ResultClass {
+  // 低风险
+  Low,
+  // 中风险
+  Medium,
+  // 高风险
+  High
+}
+
+export function probToClass(prob: number) {
+  if (prob <= 0.15) {
+    return ResultClass.Low
+  } else if (prob <= 0.5) {
+    return ResultClass.Medium
+  } else {
+    return ResultClass.High
+  }
+}
+
+export function classToLabel(c: ResultClass) {
+  switch (c) {
+    case ResultClass.Low:
+      return '低风险'
+    case ResultClass.Medium:
+      return '中风险'
+    case ResultClass.High:
+      return '高风险'
+  }
+}
+
+export function classToColor(c: ResultClass) {
+  switch (c) {
+    case ResultClass.Low:
+      return 'positive'
+    case ResultClass.Medium:
+      return 'warning'
+    case ResultClass.High:
+      return 'negative'
+  }
+}
+
+export function classToSuggestion(c: ResultClass) {
+  switch (c) {
+    case ResultClass.Low:
+      return '无'
+    case ResultClass.Medium:
+      return '观察'
+    case ResultClass.High:
+      return '就医'
+  }
+}
+
+export function classToIcon(c: ResultClass) {
+  switch (c) {
+    case ResultClass.Low:
+      return 'mdi-check-circle'
+    case ResultClass.Medium:
+      return 'mdi-information'
+    case ResultClass.High:
+      return 'mdi-alert-circle'
+  }
+}

@@ -2,7 +2,7 @@ import Dexie from 'dexie'
 import { Answer } from '@/core/predict'
 
 export interface IPredictRecord {
-  id: number
+  localId: number
   prob: number
   date: number
   answer: Answer
@@ -16,7 +16,7 @@ class AppDatabase extends Dexie {
   constructor() {
     super('AppDatabase')
     this.version(AppDatabase.DB_VERSION).stores({
-      predictRecords: '++id, prob, date, answer, synced'
+      predictRecords: '++localId, prob, date, answer, synced'
     })
     this.predictRecords = this.table('predictRecords')
   }
@@ -24,8 +24,10 @@ class AppDatabase extends Dexie {
 
 const db = new AppDatabase()
 
-export async function getPredictRecord(id: number): Promise<IPredictRecord> {
-  const record = await db.predictRecords.get(id)
+export async function getPredictRecord(
+  localId: number
+): Promise<IPredictRecord> {
+  const record = await db.predictRecords.get(localId)
   if (record) return record
   throw new Error('未找到记录')
 }
@@ -43,6 +45,6 @@ export async function addPredictRecord(
   return await db.predictRecords.put({ prob, date, answer } as any)
 }
 
-export async function removePredictRecord(id: number): Promise<void> {
-  await db.predictRecords.delete(id)
+export async function removePredictRecord(localId: number): Promise<void> {
+  await db.predictRecords.delete(localId)
 }

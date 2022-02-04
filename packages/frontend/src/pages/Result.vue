@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-12">
         <suspense>
-          <results-async />
+          <result-async :result-id="parseInt(resultId)" />
         </suspense>
       </div>
     </div>
@@ -11,8 +11,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import ResultsAsync from '@/components/ResultsAsync.vue'
+import ResultAsync from '@/components/ResultAsync.vue'
 
-const records = ref([])
+const { resultId } = defineProps<{
+  resultId: string
+}>()
 </script>

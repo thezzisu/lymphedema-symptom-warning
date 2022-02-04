@@ -11,6 +11,7 @@ export function useAsyncTask<A extends unknown[], T>(
     try {
       return await cb(...args)
     } catch (e) {
+      console.log(e)
       error.value = e
     } finally {
       loading.value = false
