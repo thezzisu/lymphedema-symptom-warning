@@ -11,8 +11,8 @@
           <q-card-section v-for="(value, key, i) of variables" :key="i">
             <div>{{ value.text }}</div>
             <div class="q-gutter-sm">
-              <q-radio v-model="result[key]" :val="0" label="不符合" />
-              <q-radio v-model="result[key]" :val="1" label="符合" />
+              <q-radio v-model="result[key]" :val="1" label="有" />
+              <q-radio v-model="result[key]" :val="0" label="无" />
             </div>
           </q-card-section>
           <q-separator inset />

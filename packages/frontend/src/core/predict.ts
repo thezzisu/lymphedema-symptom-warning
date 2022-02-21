@@ -150,3 +150,7 @@ export function classToIcon(c: ResultClass) {
       return 'mdi-alert-circle'
   }
 }
+
+export function prettierProb(prob: number) {
+  return (prob * 100).toFixed(2) + '%'
+}

@@ -4,7 +4,7 @@
       <q-toolbar>
         <q-btn dense flat round icon="mdi-menu" @click="toggleLeftDrawer" />
 
-        <q-toolbar-title>淋巴水肿发病预测</q-toolbar-title>
+        <q-toolbar-title>淋巴水肿筛查工具</q-toolbar-title>
       </q-toolbar>
 
       <q-tabs align="center">
