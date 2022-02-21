@@ -55,7 +55,8 @@ const navItems = [
   { to: '/', label: '记录', icon: 'mdi-history' },
   { to: '/predict', label: '预测', icon: 'mdi-calculator' },
   { to: '/articles', label: '知识', icon: 'mdi-book-open-page-variant' },
-  { to: '/account', label: '账户', icon: 'mdi-account' }
+  // FIXME no account in stage 1
+  { to: '/account', label: '关于', icon: 'mdi-account' }
 ]
 
 const leftDrawerOpen = ref(false)
