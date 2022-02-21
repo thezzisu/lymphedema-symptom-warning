@@ -21,6 +21,7 @@
           <q-badge color="white" :text-color="color" :label="label" />
         </div>
       </q-linear-progress>
+      <div>预测概率：{{ probText }}</div>
     </q-card-section>
     <q-separator inset />
     <q-card-section>
@@ -45,6 +46,7 @@ import {
   classToColor,
   classToLabel,
   classToSuggestion,
+  prettierProb,
   probToClass
 } from '@/core/predict'
 import { useConfirm } from '@/core/utils'
@@ -58,6 +60,7 @@ const { record } = defineProps<{
 }>()
 
 const recordClass = probToClass(record.prob)
+const probText = prettierProb(record.prob)
 const label = classToLabel(recordClass)
 const color = classToColor(recordClass)
 const suggestion = classToSuggestion(recordClass)
