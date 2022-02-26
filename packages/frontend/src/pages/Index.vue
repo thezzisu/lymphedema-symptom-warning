@@ -11,8 +11,5 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import ResultsAsync from '@/components/ResultsAsync.vue'
-
-const records = ref([])
 </script>
