@@ -8,20 +8,18 @@
           <div>{{ article.summary }}</div>
         </q-card-section>
         <q-separator inset />
-        <q-card-section v-html="contentHTML" />
+        <q-card-section v-html="article.html" />
       </q-card>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { getArticle } from '@/core/api'
-import { marked } from 'marked'
+import { getArticle } from '@/core/articles'
 
 const props = defineProps<{
   articleId: string
 }>()
 
 const article = await getArticle(props.articleId)
-const contentHTML = marked.parse(article.content)
 </script>

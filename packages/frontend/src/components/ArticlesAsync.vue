@@ -1,6 +1,6 @@
 <template>
   <div class="row justify-center" v-for="(article, i) in articles" :key="i">
-    <div class="col-sm-12 col-md-8 col-lg-4 q-pb-md">
+    <div class="col-12">
       <q-card
         v-ripple
         class="q-hoverable cursor-pointer"
@@ -10,7 +10,7 @@
         <q-img :src="article.cover">
           <div class="absolute-bottom text-h6">{{ article.title }}</div>
         </q-img>
-        <q-card-section>
+        <q-card-section v-if="article.summary">
           {{ article.summary }}
         </q-card-section>
       </q-card>
@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { getArticles } from '@/core/api'
+import { getArticles } from '@/core/articles'
 import { useRouter } from 'vue-router'
 
 const articles = await getArticles()
