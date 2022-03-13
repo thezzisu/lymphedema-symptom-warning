@@ -21,8 +21,8 @@ export const isLoggedIn = computed(() => !!apiToken.value)
 watch(
   () => apiToken,
   (token) => {
-    if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    if (token.value) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token.value}`
     } else {
       delete axios.defaults.headers.common['Authorization']
     }
@@ -47,10 +47,27 @@ export async function logout() {
   apiToken.value = ''
 }
 
-export async function myProfile() {
+export async function updateProfile() {
   const res = await axios.get('/user/profile', {
     params: { userId: apiUser.value.id }
   })
   apiUser.value = res.data
   return res.data
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function setProfile(profile: any) {
+  const res = await axios.patch('/user/profile', profile)
+  if (res.data === 1) {
+    const { nickname, realname, age } = profile
+    if (nickname) {
+      apiUser.value.nickname = nickname
+    }
+    if (realname) {
+      apiUser.value.realname = realname
+    }
+    if (age) {
+      apiUser.value.age = age
+    }
+  }
 }
