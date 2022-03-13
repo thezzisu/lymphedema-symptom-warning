@@ -9,10 +9,10 @@ export class User {
   @Column({ unique: true })
   tel: string
 
-  @Column({ default: '' })
+  @Column({ default: '未设置昵称' })
   nickname: string
 
-  @Column({ default: '' })
+  @Column({ default: '未设置真实姓名' })
   realname: string
 
   @Column({ default: 0 })
