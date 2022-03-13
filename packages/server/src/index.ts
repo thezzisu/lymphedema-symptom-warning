@@ -47,6 +47,6 @@ createConnection()
 
     server.decorate('db', connection)
     server.decorate('manager', connection.manager)
-    await server.listen(config.server.secret, '127.0.0.1')
+    await server.listen(config.server.port, '127.0.0.1')
   })
   .catch((error) => console.log(error))

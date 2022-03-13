@@ -4,8 +4,9 @@ import { User } from '../entity/User'
 import { sendCode, verifyCode } from '../sms'
 import { W } from '../util/t'
 import { APIUser } from './user'
-import got from 'got'
 import { config } from '../util/config'
+import axios from 'axios'
+import { URLSearchParams } from 'url'
 
 export const API: FastifyPluginAsync = async (server) => {
   server.register(APIUser, { prefix: '/user' })
@@ -19,17 +20,17 @@ export const API: FastifyPluginAsync = async (server) => {
     '/verify',
     { schema: { body: verifySchema } },
     async (req) => {
-      // Verify using google recaptcha v3
+      // Verify using google recaptcha
       const { tel, response } = req.body
-      const res = await got
-        .post('https://www.google.com/recaptcha/api/siteverify', {
-          json: {
-            secret: config.recaptcha.secret,
-            response
-          }
-        })
-        .json<{ success: boolean }>()
-      if (!res.success) throw server.httpErrors.forbidden()
+      const params = new URLSearchParams({
+        secret: config.recaptcha.secret,
+        response
+      })
+      const res = await axios.post<{ success: boolean }>(
+        'https://www.google.com/recaptcha/api/siteverify',
+        params.toString()
+      )
+      if (!res.data.success) throw server.httpErrors.forbidden()
 
       await sendCode(tel)
       return 1

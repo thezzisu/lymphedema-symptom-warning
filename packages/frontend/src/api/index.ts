@@ -7,13 +7,13 @@ export const token = useLocalStorage('token', '')
 export const user = useLocalStorage('user', {})
 export const isLoggedIn = computed(() => token.value !== '')
 
-export async function verify(tel: string) {
+export async function verify(tel: string, response: string) {
   await fetch(`${BASE}/verify`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ tel })
+    body: JSON.stringify({ tel, response })
   })
 }
 
