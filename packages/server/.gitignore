@@ -7,3 +7,4 @@ temp/
 database.sqlite
 /public/**/*
 !/public/.gitkeep
+sms.json
