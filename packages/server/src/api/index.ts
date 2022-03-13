@@ -12,7 +12,7 @@ export const API: FastifyPluginAsync = async (server) => {
   server.register(APIUser, { prefix: '/user' })
 
   const verifySchema = Type.Object({
-    tel: Type.String(),
+    tel: Type.String({ minLength: 11, maxLength: 11 }),
     response: Type.String()
   })
 
@@ -38,7 +38,7 @@ export const API: FastifyPluginAsync = async (server) => {
   )
 
   const loginSchema = Type.Object({
-    tel: Type.String(),
+    tel: Type.String({ minLength: 11, maxLength: 11 }),
     code: Type.String()
   })
 
