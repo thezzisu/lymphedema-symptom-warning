@@ -77,6 +77,21 @@ export const APIUser: FastifyPluginAsync = async (server) => {
     }
   )
 
+  const getProfileSchema = Type.Object({
+    userId: Type.Number()
+  })
+  server.get<{ Querystring: Static<typeof getProfileSchema> }>(
+    '/profile',
+    { schema: { querystring: getProfileSchema } },
+    async (req) => {
+      const { userId } = req.query
+      const { user } = req.ctx
+      if (userId !== user.id && !user.admin) throw server.httpErrors.forbidden()
+
+      return server.manager.findOne(User, userId)
+    }
+  )
+
   const updateProfileSchema = Type.Object({
     nickname: Type.String({ minLength: 1, maxLength: 20 }),
     realname: Type.String({ minLength: 1, maxLength: 20 }),
