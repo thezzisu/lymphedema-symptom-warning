@@ -3,12 +3,10 @@
     <q-card-section>
       <div class="column items-center">
         <div>
-          <q-icon size="xl" name="mdi-account-circle" />
+          <q-icon size="6rem" name="mdi-account-circle" />
         </div>
         <div class="row q-gutter-md">
-          <q-btn unelevated color="primary" label="注册" to="/register" />
-          <q-separator vertical />
-          <q-btn outline color="primary" label="登录" to="/login" />
+          <q-btn color="primary" label="注册/登录" to="/login" />
         </div>
       </div>
     </q-card-section>

@@ -1,10 +1,9 @@
 <template>
   <q-page padding>
     <div class="row q-col-gutter-sm">
-      <!-- FIXME no account in stage 1 -->
-      <!-- <div class="col-12">
+      <div class="col-12">
         <user-embed-proxy />
-      </div> -->
+      </div>
       <div class="col-12">
         <q-card>
           <q-list bordered padding>

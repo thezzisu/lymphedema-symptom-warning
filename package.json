@@ -6,9 +6,15 @@
   "author": "thezzisu <thezzisu@gmail.com>",
   "license": "Apache-2.0",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/typeorm",
+      "**/typeorm/**"
+    ]
+  },
   "devDependencies": {
     "@types/node": "^17.0.14",
     "@typescript-eslint/eslint-plugin": "^5.10.2",

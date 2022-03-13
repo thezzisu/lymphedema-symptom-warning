@@ -6,7 +6,6 @@ import Articles from '@/pages/Articles.vue'
 import Article from '@/pages/Article.vue'
 import Account from '@/pages/Account.vue'
 import Login from '@/pages/Login.vue'
-import Register from '@/pages/Register.vue'
 import NotFound from '@/pages/NotFound.vue'
 
 const router = createRouter({
@@ -48,11 +47,6 @@ const router = createRouter({
       name: 'login',
       path: '/login',
       component: Login
-    },
-    {
-      name: 'register',
-      path: '/register',
-      component: Register
     },
     {
       name: 'notFound',
