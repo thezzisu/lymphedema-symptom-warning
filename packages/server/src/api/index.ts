@@ -4,19 +4,34 @@ import { User } from '../entity/User'
 import { sendCode, verifyCode } from '../sms'
 import { W } from '../util/t'
 import { APIUser } from './user'
+import got from 'got'
+import { config } from '../util/config'
 
 export const API: FastifyPluginAsync = async (server) => {
   server.register(APIUser, { prefix: '/user' })
 
   const verifySchema = Type.Object({
-    tel: Type.String()
+    tel: Type.String(),
+    response: Type.String()
   })
 
   server.post<W<typeof verifySchema>>(
     '/verify',
     { schema: { body: verifySchema } },
     async (req) => {
-      await sendCode(req.body.tel)
+      // Verify using google recaptcha v3
+      const { tel, response } = req.body
+      const res = await got
+        .post('https://www.google.com/recaptcha/api/siteverify', {
+          json: {
+            secret: config.recaptcha.secret,
+            response
+          }
+        })
+        .json<{ success: boolean }>()
+      if (!res.success) throw server.httpErrors.forbidden()
+
+      await sendCode(tel)
       return 1
     }
   )

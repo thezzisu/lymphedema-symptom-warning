@@ -1,15 +1,13 @@
 import NodeCache = require('node-cache')
 import { logger } from '../util'
 import * as tencentcloud from 'tencentcloud-sdk-nodejs-sms'
-import { readFileSync } from 'fs'
-
-const config = JSON.parse(readFileSync('sms.json').toString())
+import { config } from '../util/config'
 
 const Client = tencentcloud.sms.v20210111.Client
 const client = new Client({
   credential: {
-    secretId: config.credential.id,
-    secretKey: config.credential.key
+    secretId: config.sms.credential.id,
+    secretKey: config.sms.credential.key
   },
   region: 'ap-guangzhou',
   profile: {}
@@ -28,10 +26,10 @@ export async function sendCode(tel: string) {
   cache.set(tel, code)
   logger.info(`Send code ${code} to ${tel}`)
   await client.SendSms({
-    SmsSdkAppId: config.appId,
+    SmsSdkAppId: config.sms.appId,
     PhoneNumberSet: ['+86' + tel],
-    SignName: config.signName,
-    TemplateId: config.templateId,
+    SignName: config.sms.signName,
+    TemplateId: config.sms.templateId,
     TemplateParamSet: [code]
   })
 }
