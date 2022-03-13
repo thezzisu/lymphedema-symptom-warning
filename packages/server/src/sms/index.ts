@@ -25,13 +25,15 @@ export async function sendCode(tel: string) {
   const code = generateCode()
   cache.set(tel, code)
   logger.info(`Send code ${code} to ${tel}`)
-  await client.SendSms({
-    SmsSdkAppId: config.sms.appId,
-    PhoneNumberSet: ['+86' + tel],
-    SignName: config.sms.signName,
-    TemplateId: config.sms.templateId,
-    TemplateParamSet: [code]
-  })
+  if (config.sms.enabled) {
+    await client.SendSms({
+      SmsSdkAppId: config.sms.appId,
+      PhoneNumberSet: ['+86' + tel],
+      SignName: config.sms.signName,
+      TemplateId: config.sms.templateId,
+      TemplateParamSet: [code]
+    })
+  }
 }
 
 export async function verifyCode(tel: string, code: string) {
