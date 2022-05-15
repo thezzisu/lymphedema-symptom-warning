@@ -37,6 +37,7 @@
 import { useAsyncTask } from '@/composables/async'
 import { Answer, predict, variables } from '@/core/predict'
 import { addPredictRecord } from '@/db'
+import { useLocalStorage } from '@vueuse/core'
 import { useQuasar } from 'quasar'
 import { nextTick, ref, toRaw } from 'vue'
 import { useRouter } from 'vue-router'
@@ -48,15 +49,36 @@ const result = ref<Answer>(
   Object.fromEntries(Object.entries(variables).map(([key]) => [key, 0])) as any
 )
 
+const tasksInfo = useLocalStorage<Record<string, string>>(
+  'tasksInfo',
+  {},
+  { deep: true }
+)
+
 const { loading: predictLoading, run: predictRun } = useAsyncTask(async () => {
   const answer = toRaw(result.value)
   const prob = await predict(answer)
   const resultId = await addPredictRecord(prob, +new Date(), answer)
+  if (tasksInfo.value['预测发病率'] !== new Date().toDateString()) {
+    $q.dialog({
+      title: '任务完成',
+      message: '您已完成预测发病率任务！',
+      ok: {
+        label: '查看结果'
+      },
+      persistent: true
+    }).onOk(() => {
+      $router.push({ name: 'result', params: { resultId } })
+    })
+    tasksInfo.value['预测发病率'] = new Date().toDateString()
+    console.log('12345')
+  } else {
+    nextTick(() => $router.push({ name: 'result', params: { resultId } }))
+  }
   $q.notify({
     color: 'positive',
     message: '预测结果已保存',
     timeout: 2000
   })
-  nextTick(() => $router.push({ name: 'result', params: { resultId } }))
 })
 </script>
