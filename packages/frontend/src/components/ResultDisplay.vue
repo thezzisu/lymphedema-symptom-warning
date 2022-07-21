@@ -13,12 +13,16 @@
       <div class="text-h6">发病概率</div>
       <q-linear-progress
         size="50px"
-        :value="record.prob"
-        :color="color"
+        :value="record.result[0]"
+        :color="resultClass.color"
         class="q-mt-sm"
       >
         <div class="absolute-full flex flex-center">
-          <q-badge color="white" :text-color="color" :label="label" />
+          <q-badge
+            color="white"
+            :text-color="resultClass.color"
+            :label="resultClass.label"
+          />
         </div>
       </q-linear-progress>
       <div>预测概率：{{ probText }}</div>
@@ -26,7 +30,7 @@
     <q-separator inset />
     <q-card-section>
       <div class="text-h6">建议</div>
-      <div>{{ suggestion }}</div>
+      <div>{{ resultClass.suggestion }}</div>
     </q-card-section>
     <q-separator inset />
     <q-card-actions align="right">
@@ -42,13 +46,7 @@
 
 <script setup lang="ts">
 import { useAsyncTask } from '@/composables/async'
-import {
-  classToColor,
-  classToLabel,
-  classToSuggestion,
-  prettierProb,
-  probToClass
-} from '@/core/predict'
+import { prettierProb, getResultClass } from '@/core/predict'
 import { useConfirm } from '@/core/utils'
 import { IPredictRecord, removePredictRecord } from '@/db'
 import { useQuasar } from 'quasar'
@@ -59,11 +57,8 @@ const { record } = defineProps<{
   record: IPredictRecord
 }>()
 
-const recordClass = probToClass(record.prob)
-const probText = prettierProb(record.prob)
-const label = classToLabel(recordClass)
-const color = classToColor(recordClass)
-const suggestion = classToSuggestion(recordClass)
+const resultClass = getResultClass(record.result)
+const probText = prettierProb(record.result[0])
 const time = new Date(record.ts).toLocaleString()
 
 const confirm = useConfirm()

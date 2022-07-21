@@ -8,11 +8,11 @@
             <div>请按照您最近的真实情况作答，以提高预测结果的可靠性</div>
           </q-card-section>
           <q-separator inset />
-          <q-card-section v-for="(value, key, i) of variables" :key="i">
-            <div>{{ value.text }}</div>
+          <q-card-section v-for="(value, i) of variables" :key="i">
+            <div>{{ value[0] }}</div>
             <div class="q-gutter-sm">
-              <q-radio v-model="result[key]" :val="1" label="有" />
-              <q-radio v-model="result[key]" :val="0" label="无" />
+              <q-radio v-model="input[i]" :val="1" :label="value[1]" />
+              <q-radio v-model="input[i]" :val="0" :label="value[2]" />
             </div>
           </q-card-section>
           <q-separator inset />
@@ -45,9 +45,7 @@ import { useRouter } from 'vue-router'
 const $q = useQuasar()
 const $router = useRouter()
 
-const result = ref<Answer>(
-  Object.fromEntries(Object.entries(variables).map(([key]) => [key, 0])) as any
-)
+const input = ref<Answer>(variables.map(() => 0))
 
 const tasksInfo = useLocalStorage<Record<string, string>>(
   'tasksInfo',
@@ -56,9 +54,9 @@ const tasksInfo = useLocalStorage<Record<string, string>>(
 )
 
 const { loading: predictLoading, run: predictRun } = useAsyncTask(async () => {
-  const answer = toRaw(result.value)
-  const prob = await predict(answer)
-  const resultId = await addPredictRecord(prob, +new Date(), answer)
+  const answer = toRaw(input.value)
+  const result = await predict(answer)
+  const recordId = await addPredictRecord(answer, result)
   if (tasksInfo.value['预测发病率'] !== new Date().toDateString()) {
     $q.dialog({
       title: '任务完成',
@@ -68,12 +66,14 @@ const { loading: predictLoading, run: predictRun } = useAsyncTask(async () => {
       },
       persistent: true
     }).onOk(() => {
-      $router.push({ name: 'result', params: { resultId } })
+      $router.push({ name: 'result', params: { resultId: recordId } })
     })
     tasksInfo.value['预测发病率'] = new Date().toDateString()
     console.log('12345')
   } else {
-    nextTick(() => $router.push({ name: 'result', params: { resultId } }))
+    nextTick(() =>
+      $router.push({ name: 'result', params: { resultId: recordId } })
+    )
   }
   $q.notify({
     color: 'positive',

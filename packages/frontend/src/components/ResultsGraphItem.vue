@@ -13,13 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  classToColor,
-  classToIcon,
-  classToLabel,
-  prettierProb,
-  probToClass
-} from '@/core/predict'
+import { prettierProb, getResultClass } from '@/core/predict'
 import { IPredictRecord } from '@/db'
 
 const { record } = defineProps<{ record?: IPredictRecord }>()
@@ -29,11 +23,11 @@ let color = 'grey'
 let icon = 'mdi-help'
 let probText = '-'
 if (record) {
-  const prob = record.prob
+  const prob = record.result[0]
   probText = prettierProb(prob)
-  const recordClass = probToClass(prob)
-  label = classToLabel(recordClass)
-  color = classToColor(recordClass)
-  icon = classToIcon(recordClass)
+  const resultClass = getResultClass(record.result)
+  label = resultClass.label
+  color = resultClass.color
+  icon = resultClass.icon
 }
 </script>

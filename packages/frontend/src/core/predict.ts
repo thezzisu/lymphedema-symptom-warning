@@ -1,154 +1,70 @@
-export const variables = {
-  shoulder_limited: {
-    text: '肩部有无活动受限',
-    w: 0.202
-  },
-  arm_limited: {
-    text: '手臂有无活动受限',
-    w: 1.937
-  },
-  arm_swelling: {
-    text: '上肢肿胀',
-    w: 1.55
-  },
-  chest_wall_swelling: {
-    text: '胸部（胸壁）肿胀',
-    w: 0.388
-  },
-  arm_tightness: {
-    text: '患肢紧绷',
-    w: 1.191
-  },
-  arm_heaviness: {
-    text: '患肢沉重',
-    w: 1.099
-  },
-  skin_toughness_or_thickness: {
-    text: '患肢皮肤变硬、粗糙或增厚',
-    w: 17.811
-  },
-  arm_firmness: {
-    text: '患肢不灵活',
-    w: 0.685
-  },
-  tenderness: {
-    text: '患肢触痛或压痛',
-    w: -2.04
-  },
-  limb_hotness: {
-    text: '患肢皮肤温度升高，发热或发烫',
-    w: 1.218
-  },
-  blistering: {
-    text: '患肢皮肤起水泡',
-    w: 1.241
-  },
-  limb_pain: {
-    text: '患肢疼痛/隐痛/酸痛',
-    w: 0.444
-  },
-  numbness: {
-    text: '患肢麻木',
-    w: 0.773
-  },
-  stabbing: {
-    text: '患肢刺痛',
-    w: 1.121
-  },
-  tingling: {
-    text: '患肢有针扎样感觉',
-    w: 2.459
-  },
-  limb_fatigue: {
-    text: '患肢疲乏',
-    w: 0.012
-  },
-  limb_weakness: {
-    text: '患肢无力',
-    w: 0.6
-  }
-}
+export type Variable = [
+  question: string,
+  positive: string,
+  negative: string,
+  weight: number,
+  additivePositive: number,
+  additiveNegative: number
+]
 
-export const intercept = -3.435
+export const variables: Variable[] = [
+  ['BMI', '≥25', '<25', 0.738, 2, 1],
+  ['高血压', '是', '否', 0.786, 2, 1],
+  ['肿瘤分期', 'III', 'I或II', 0.625, 2, 1],
+  ['乳房手术类型', '全乳切除', '肿物切除', 0.311, 2, 1],
+  ['腋窝手术类型', 'ALND', 'SLNB', 1.117, 3, 1],
+  ['淋巴结清扫数量', '≥10', '<10', 0.365, 2, 1],
+  ['新辅助化疗', '是', '否', 0.793, 2, 1],
+  ['放疗', '是', '否', 0.687, 2, 1],
+  ['术后并发症', '是', '否', 0.715, 2, 1]
+]
 
-export type Answer = Record<keyof typeof variables, number>
+export const intercept = -1.2715
+
+export type Answer = number[]
+export type Result = [number, number]
 
 export function sigmoid(x: number) {
   return 1 / (1 + Math.exp(-x))
 }
 
 // eslint-disable-next-line require-await
-export async function predict(data: Answer): Promise<number> {
-  let sum = 0
-  for (const [key, value] of Object.entries(data)) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    sum += variables[key].w * value
-  }
-  return sigmoid(sum + intercept)
+export async function predict(data: Answer): Promise<Result> {
+  const [sum, score] = data
+    .map((x, i) => ((v) => (x ? [v[3], v[4]] : [0, v[5]]))(variables[i]))
+    .reduce(([a, b], [c, d]) => [a + c, b + d], [0, 0])
+  return [sigmoid(sum + intercept), score]
 }
 
-export enum ResultClass {
-  // 低风险
-  Low,
-  // 中风险
-  Medium,
-  // 高风险
-  High
+export interface IResultClass {
+  label: string
+  suggestion: string
+  icon: string
+  color: string
+  cond: (r: Result) => boolean
 }
 
-export function probToClass(prob: number) {
-  if (prob <= 0.15) {
-    return ResultClass.Low
-  } else if (prob <= 0.5) {
-    return ResultClass.Medium
-  } else {
-    return ResultClass.High
+const resultClasses: IResultClass[] = [
+  {
+    label: '低危',
+    suggestion: '推荐继续保持',
+    icon: 'mdi-check-circle',
+    color: 'positive',
+    cond: (r) => r[1] < 14.5
+  },
+  {
+    label: '高危',
+    suggestion: '推荐立即治疗',
+    icon: 'mdi-alert-circle',
+    color: 'negative',
+    cond: (r) => r[1] >= 14.5
   }
-}
+]
 
-export function classToLabel(c: ResultClass) {
-  switch (c) {
-    case ResultClass.Low:
-      return '低风险'
-    case ResultClass.Medium:
-      return '中风险'
-    case ResultClass.High:
-      return '高风险'
-  }
-}
-
-export function classToColor(c: ResultClass) {
-  switch (c) {
-    case ResultClass.Low:
-      return 'positive'
-    case ResultClass.Medium:
-      return 'warning'
-    case ResultClass.High:
-      return 'negative'
-  }
-}
-
-export function classToSuggestion(c: ResultClass) {
-  switch (c) {
-    case ResultClass.Low:
-      return '无'
-    case ResultClass.Medium:
-      return '观察'
-    case ResultClass.High:
-      return '就医'
-  }
-}
-
-export function classToIcon(c: ResultClass) {
-  switch (c) {
-    case ResultClass.Low:
-      return 'mdi-check-circle'
-    case ResultClass.Medium:
-      return 'mdi-information'
-    case ResultClass.High:
-      return 'mdi-alert-circle'
-  }
+export function getResultClass(r: Result): IResultClass {
+  const one = resultClasses.find((c) => c.cond(r))
+  if (!one) throw new Error('Bad result!')
+  return one
 }
 
 export function prettierProb(prob: number) {
