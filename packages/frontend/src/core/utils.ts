@@ -22,3 +22,8 @@ export const useConfirm = () => {
 export function prettierProb(prob: number) {
   return (prob * 100).toFixed(2) + '%'
 }
+
+export function isWx() {
+  const ua = navigator.userAgent.toLowerCase()
+  return ua.indexOf('micromessenger') !== -1
+}
