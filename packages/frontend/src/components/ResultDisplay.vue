@@ -1,7 +1,7 @@
 <template>
   <q-card>
     <q-card-section>
-      <div class="text-h5">评估结果</div>
+      <div class="text-h5">{{ model.name }}评估结果</div>
       <div>注意：结果仅供参考</div>
     </q-card-section>
     <q-separator inset />
@@ -14,14 +14,14 @@
       <q-linear-progress
         size="50px"
         :value="record.result[0]"
-        :color="resultClass.color"
+        :color="category.color"
         class="q-mt-sm"
       >
         <div class="absolute-full flex flex-center">
           <q-badge
             color="white"
-            :text-color="resultClass.color"
-            :label="resultClass.label"
+            :text-color="category.color"
+            :label="category.label"
           />
         </div>
       </q-linear-progress>
@@ -30,7 +30,7 @@
     <q-separator inset />
     <q-card-section>
       <div class="text-h6">建议</div>
-      <div>{{ resultClass.suggestion }}</div>
+      <div>{{ category.suggestion }}</div>
     </q-card-section>
     <q-separator inset />
     <q-card-actions align="right">
@@ -46,8 +46,8 @@
 
 <script setup lang="ts">
 import { useAsyncTask } from '@/composables/async'
-import { prettierProb, getResultClass } from '@/core/predict'
-import { useConfirm } from '@/core/utils'
+import { models } from '@/core/model'
+import { useConfirm, prettierProb } from '@/core/utils'
 import { IPredictRecord, removePredictRecord } from '@/db'
 import { useQuasar } from 'quasar'
 import { nextTick } from 'vue'
@@ -57,7 +57,8 @@ const { record } = defineProps<{
   record: IPredictRecord
 }>()
 
-const resultClass = getResultClass(record.result)
+const model = models[record.modelId]
+const category = model.getCategory(record.result)
 const probText = prettierProb(record.result[0])
 const time = new Date(record.ts).toLocaleString()
 

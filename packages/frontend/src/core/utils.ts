@@ -18,3 +18,7 @@ export const useConfirm = () => {
         .onCancel(reject)
     )
 }
+
+export function prettierProb(prob: number) {
+  return (prob * 100).toFixed(2) + '%'
+}

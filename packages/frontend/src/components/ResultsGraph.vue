@@ -22,7 +22,7 @@
     <div class="row">
       <div class="col" v-for="(day, i) in days" :key="i">
         <div class="column items-center">
-          <results-graph-item :record="recordPerDay[i]" />
+          <results-graph-item :records="recordsPerDay[i]" />
           <div class="text-subtitle2">
             {{ weekdays[i] }}
           </div>
@@ -43,12 +43,10 @@ const now = new Date()
 const dow = now.getDay()
 const start = Math.floor(+now / MS_PER_DAY) * MS_PER_DAY - MS_PER_DAY * dow
 const days = [...new Array(7)].map((_, i) => new Date(start + MS_PER_DAY * i))
-const recordPerDay = [...new Array(7)].map((_, i) => {
+const recordsPerDay = [...new Array(7)].map((_, i) => {
   const start = +days[i]
   const end = start + MS_PER_DAY
-  return records
-    .filter((r) => r.ts >= start && r.ts < end)
-    .sort((l, r) => r.result[0] - l.result[0])[0]
+  return records.filter((r) => r.ts >= start && r.ts < end)
 })
 const weekdays = '日一二三四五六'
 </script>

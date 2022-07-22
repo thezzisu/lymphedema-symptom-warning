@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Index from '@/pages/Index.vue'
+import Models from '@/pages/Models.vue'
 import Predict from '@/pages/Predict.vue'
 import Result from '@/pages/Result.vue'
 import Articles from '@/pages/Articles.vue'
@@ -18,9 +19,15 @@ const router = createRouter({
       component: Index
     },
     {
-      name: 'predict',
+      name: 'models',
       path: '/predict',
-      component: Predict
+      component: Models
+    },
+    {
+      name: 'predict',
+      path: '/predict/:modelId',
+      component: Predict,
+      props: true
     },
     {
       name: 'result',

@@ -1,10 +1,11 @@
 import Dexie from 'dexie'
-import { Answer, Result } from '@/core/predict'
+import { Answer, Result } from '@/core/model'
 
 export interface IPredictRecord {
   localId: number
   id: string
   ts: number
+  modelId: string
   answer: Answer
   result: Result
   synced: boolean
@@ -32,7 +33,7 @@ class AppDatabase extends Dexie {
   constructor() {
     super('AppDatabase')
     this.version(AppDatabase.DB_VERSION).stores({
-      predictRecords: '++localId, id, ts, answer, result, synced',
+      predictRecords: '++localId, id, ts, modelId, answer, result, synced',
       operationRecords: '++localId, type, payload, ts, synced'
     })
     this.predictRecords = this.table('predictRecords')
@@ -55,6 +56,7 @@ export async function getPredictRecords(): Promise<IPredictRecord[]> {
 }
 
 export async function addPredictRecord(
+  modelId: string,
   answer: Answer,
   result: Result,
   ts: number = Date.now()
@@ -62,6 +64,7 @@ export async function addPredictRecord(
   const record: Omit<IPredictRecord, 'localId'> = {
     id: '',
     ts,
+    modelId,
     answer,
     result,
     synced: false

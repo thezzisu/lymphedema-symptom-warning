@@ -15,7 +15,7 @@
         </div>
       </div>
     </q-card-section>
-    <q-card-section class="row">
+    <q-card-section class="row q-gutter-sm">
       <template v-if="displayTasks.length">
         <q-card
           v-for="task of displayTasks"
@@ -34,7 +34,7 @@
               :ripple="false"
             />
           </div>
-          <div class="text-subtitle2">{{ task.name }}</div>
+          <div class="text-subtitle2">{{ task.label }}</div>
         </q-card>
       </template>
       <template v-else>
@@ -50,14 +50,19 @@
 import { useLocalStorage } from '@vueuse/core'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { models } from '@/core/model'
 
 const router = useRouter()
 
 const showDone = ref(false)
 
 const tasks = [
-  //
-  { name: '预测发病率', icon: 'mdi-clipboard-check-outline', to: '/predict' }
+  ...Object.entries(models).map(([id, model]) => ({
+    name: 'predict_' + id,
+    label: '进行' + model.name + '预测',
+    icon: 'mdi-clipboard-check-outline',
+    to: '/predict/' + id
+  }))
 ]
 
 const tasksInfo = useLocalStorage<Record<string, string>>(
