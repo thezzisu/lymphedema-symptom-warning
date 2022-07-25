@@ -25,7 +25,11 @@
           />
         </div>
       </q-linear-progress>
+      <div class="q-mt-sm">风险等级：{{ category.label }}</div>
       <div>预测概率：{{ probText }}</div>
+      <div v-if="record.result.length > 1">
+        评估得分：{{ record.result[1] }}
+      </div>
     </q-card-section>
     <q-separator inset />
     <q-card-section>
