@@ -9,6 +9,7 @@ import Account from '@/pages/Account.vue'
 import Login from '@/pages/Login.vue'
 import Profile from '@/pages/Profile.vue'
 import NotFound from '@/pages/NotFound.vue'
+import Prescription from '@/pages/Prescription.vue'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -33,6 +34,12 @@ const router = createRouter({
       name: 'result',
       path: '/result/:resultId',
       component: Result,
+      props: true
+    },
+    {
+      name: 'prescription',
+      path: '/prescription/:prescriptionId',
+      component: Prescription,
       props: true
     },
     {

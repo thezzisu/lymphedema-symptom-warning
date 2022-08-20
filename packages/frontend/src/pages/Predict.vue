@@ -41,8 +41,8 @@
 <script setup lang="ts">
 import { useAsyncTask } from '@/composables/async'
 import { Answer, models } from '@/core/model'
+import { taskMap, doTask, isTaskDone } from '@/core/task'
 import { addPredictRecord } from '@/db'
-import { useLocalStorage } from '@vueuse/core'
 import { useQuasar } from 'quasar'
 import { nextTick, ref, toRaw } from 'vue'
 import { useRouter } from 'vue-router'
@@ -59,18 +59,12 @@ const $router = useRouter()
 const parameters = model.getParameters()
 const input = ref<Answer>(parameters.map(() => 0))
 
-const tasksInfo = useLocalStorage<Record<string, string>>(
-  'tasksInfo',
-  {},
-  { deep: true }
-)
-
 const { loading: predictLoading, run: predictRun } = useAsyncTask(async () => {
   const answer = toRaw(input.value)
   const result = model.predict(answer)
   const recordId = await addPredictRecord(modelId, answer, result)
   const taskName = 'predict_' + modelId
-  if (tasksInfo.value[taskName] !== new Date().toDateString()) {
+  if (!isTaskDone(taskName)) {
     $q.dialog({
       title: '任务完成',
       message: `您已完成${model.name}预测任务！`,
@@ -81,7 +75,7 @@ const { loading: predictLoading, run: predictRun } = useAsyncTask(async () => {
     }).onOk(() => {
       $router.push({ name: 'result', params: { resultId: recordId } })
     })
-    tasksInfo.value[taskName] = new Date().toDateString()
+    doTask(taskName)
   } else {
     nextTick(() =>
       $router.push({ name: 'result', params: { resultId: recordId } })

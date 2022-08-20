@@ -15,27 +15,28 @@
         </div>
       </div>
     </q-card-section>
-    <q-card-section class="row q-gutter-sm">
+    <q-card-section class="row">
       <template v-if="displayTasks.length">
-        <q-card
-          v-for="task of displayTasks"
-          bordered
-          flat
-          class="column items-center q-pa-sm"
-          v-ripple
-          @click="router.push(task.to)"
-        >
-          <div>
-            <q-btn
-              round
-              color="primary"
-              :icon="task.icon"
-              outline
-              :ripple="false"
-            />
-          </div>
-          <div class="text-subtitle2">{{ task.label }}</div>
-        </q-card>
+        <div v-for="task of displayTasks" class="col-xs-6 col-md-3 q-pa-sm">
+          <q-card
+            bordered
+            flat
+            class="column items-center q-pa-sm"
+            v-ripple
+            @click="router.push(task.to)"
+          >
+            <div>
+              <q-btn
+                round
+                :color="task.color"
+                :icon="task.icon"
+                outline
+                :ripple="false"
+              />
+            </div>
+            <div class="text-subtitle2">{{ task.label }}</div>
+          </q-card>
+        </div>
       </template>
       <template v-else>
         <div class="col-12 row justify-center">
@@ -51,6 +52,8 @@ import { useLocalStorage } from '@vueuse/core'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { models } from '@/core/model'
+import { prescriptions } from '@/core/prescription'
+import { isTaskDone } from '@/core/task'
 
 const router = useRouter()
 
@@ -61,21 +64,19 @@ const tasks = [
     name: 'predict_' + id,
     label: '进行' + model.name + '预测',
     icon: 'mdi-clipboard-check-outline',
-    to: '/predict/' + id
+    to: '/predict/' + id,
+    color: 'primary'
+  })),
+  ...Object.entries(prescriptions).map(([id, prescription]) => ({
+    name: 'prescription_' + id,
+    label: prescription.name,
+    icon: 'mdi-walk',
+    to: '/prescription/' + id,
+    color: 'positive'
   }))
 ]
 
-const tasksInfo = useLocalStorage<Record<string, string>>(
-  'tasksInfo',
-  {},
-  { deep: true }
-)
-
 const displayTasks = computed(() =>
-  tasks.filter(
-    (task) =>
-      (tasksInfo.value[task.name] !== new Date().toDateString()) !==
-      showDone.value
-  )
+  tasks.filter((task) => isTaskDone(task.name) === showDone.value)
 )
 </script>
