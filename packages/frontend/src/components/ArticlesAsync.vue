@@ -1,6 +1,6 @@
 <template>
   <div class="row justify-center" v-for="(article, i) in articles" :key="i">
-    <div class="col-12">
+    <div class="col-12 q-pa-sm">
       <q-card
         v-ripple
         class="q-hoverable cursor-pointer"
