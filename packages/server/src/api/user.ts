@@ -15,8 +15,10 @@ declare module 'fastify' {
 
 export const APIUser: FastifyPluginAsync = async (server) => {
   server.addHook('preValidation', async (req) => {
-    const r = await req.jwtVerify<{ id: string }>()
-    const user = await server.manager.findOneOrFail(User, r.id)
+    const r = await req.jwtVerify<{ id: number }>()
+    const user = await server.manager.findOneOrFail(User, {
+      where: { id: r.id }
+    })
     req.ctx = { user }
   })
 
@@ -33,7 +35,7 @@ export const APIUser: FastifyPluginAsync = async (server) => {
       const { user } = req.ctx
       if (userId !== user.id && !user.admin) throw server.httpErrors.forbidden()
 
-      return server.manager.find(PredictRecord, { userId })
+      return server.manager.find(PredictRecord, { where: { userId } })
     }
   )
 
@@ -41,7 +43,7 @@ export const APIUser: FastifyPluginAsync = async (server) => {
     userId: Type.Number(),
     data: Type.String()
   })
-  server.put<W<typeof addRecordSchema>>(
+  server.post<W<typeof addRecordSchema>>(
     '/record',
     { schema: { body: addRecordSchema } },
     async (req) => {
@@ -51,24 +53,23 @@ export const APIUser: FastifyPluginAsync = async (server) => {
 
       let record = new PredictRecord()
       record.data = data
-      record.id = user.id
+      record.userId = userId
       record = await server.manager.save(record)
       return record.id
     }
   )
 
   const deleteRecordSchema = Type.Object({
-    id: Type.String()
+    id: Type.Number()
   })
   server.delete<W<typeof deleteRecordSchema>>(
     '/record',
     { schema: { body: deleteRecordSchema } },
     async (req) => {
       const { user } = req.ctx
-      const record = await server.manager.findOneOrFail(
-        PredictRecord,
-        req.body.id
-      )
+      const record = await server.manager.findOneOrFail(PredictRecord, {
+        where: { id: req.body.id }
+      })
       if (record.userId !== user.id && !user.admin) {
         throw server.httpErrors.forbidden()
       }
@@ -88,7 +89,9 @@ export const APIUser: FastifyPluginAsync = async (server) => {
       const { user } = req.ctx
       if (userId !== user.id && !user.admin) throw server.httpErrors.forbidden()
 
-      return server.manager.findOne(User, userId)
+      return server.manager.findOne(User, {
+        where: { id: userId }
+      })
     }
   )
 

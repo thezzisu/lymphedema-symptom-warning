@@ -7,6 +7,8 @@
     <q-separator inset />
     <q-card-section>
       <div>评估时间：{{ time }}</div>
+      <div>本地编号：{{ record.localId }}</div>
+      <div v-if="record.id">云端编号：{{ record.id }}</div>
     </q-card-section>
     <q-separator inset />
     <q-card-section>

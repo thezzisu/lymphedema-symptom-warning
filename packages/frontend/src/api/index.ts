@@ -1,3 +1,4 @@
+import { db, getPredictRecord } from '@/db'
 import { useLocalStorage } from '@vueuse/core'
 import axios from 'axios'
 import { computed, watch } from 'vue'
@@ -70,4 +71,19 @@ export async function setProfile(profile: any) {
       apiUser.value.age = age
     }
   }
+}
+
+export async function addRecord(recordId: number) {
+  const record = await getPredictRecord(recordId)
+  const { modelId, answer, result, ts } = record
+  const res = await axios.post('/user/record', {
+    userId: apiUser.value.id,
+    data: JSON.stringify({
+      modelId,
+      answer,
+      result,
+      ts
+    })
+  })
+  await db.predictRecords.update(record.localId, { id: res.data, synced: true })
 }

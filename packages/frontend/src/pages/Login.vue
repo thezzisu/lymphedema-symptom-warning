@@ -12,7 +12,7 @@
           </q-card-section>
           <q-card-section class="row justify-center">
             <vue-recaptcha
-              sitekey="6LfeHNceAAAAAAFxsGGb6NjJ8upIySzEKF0BaUFw"
+              :sitekey="siteKey"
               @verify="onVerify"
               load-recaptcha-script
               recaptchaHost="www.recaptcha.net"
@@ -61,6 +61,7 @@ const code = ref('')
 const $q = useQuasar()
 const router = useRouter()
 const response = ref('')
+const siteKey = import.meta.env.VITE_SITE_KEY
 
 function onVerify(token: string) {
   response.value = token

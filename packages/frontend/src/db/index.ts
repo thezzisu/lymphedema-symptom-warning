@@ -41,7 +41,7 @@ class AppDatabase extends Dexie {
   }
 }
 
-const db = new AppDatabase()
+export const db = new AppDatabase()
 
 export async function getPredictRecord(
   localId: number

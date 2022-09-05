@@ -1,24 +1,25 @@
 import 'reflect-metadata'
-import { createConnection, Connection, EntityManager } from 'typeorm'
+import { EntityManager, DataSource } from 'typeorm'
 import fastify from 'fastify'
-import fastifySensible from 'fastify-sensible'
-import fastifyCors from 'fastify-cors'
-import fastifyStatic from 'fastify-static'
-import fastifyJwt from 'fastify-jwt'
+import fastifySensible from '@fastify/sensible'
+import fastifyCors from '@fastify/cors'
+import fastifyStatic from '@fastify/static'
+import fastifyJwt from '@fastify/jwt'
 import { logger } from './util'
 import { API } from './api'
-import { User } from './entity/User'
 import { config } from './util/config'
+import { User } from './entity/User'
+import { PredictRecord } from './entity/Record'
 
 declare module 'fastify' {
   interface FastifyInstance {
-    db: Connection
+    db: DataSource
     manager: EntityManager
   }
 }
 
-async function init(conn: Connection) {
-  let user = await conn.manager.findOne(User, { admin: true })
+async function init(conn: DataSource) {
+  let user = await conn.manager.findOne(User, { where: { admin: true } })
   if (!user) {
     logger.info('Creating admin user')
     user = new User()
@@ -31,10 +32,19 @@ async function init(conn: Connection) {
   }
 }
 
-createConnection()
-  .then(async (connection) => {
+const dataSource = new DataSource({
+  type: 'sqlite',
+  database: 'database.sqlite',
+  synchronize: true,
+  logging: false,
+  entities: [User, PredictRecord]
+})
+
+dataSource
+  .initialize()
+  .then(async (ds) => {
     logger.info('Database connected')
-    await init(connection)
+    await init(ds)
 
     const server = fastify({ logger })
     await server.register(fastifyCors, { origin: true, credentials: true })
@@ -45,8 +55,11 @@ createConnection()
     await server.register(fastifyJwt, { secret: config.server.secret })
     await server.register(API)
 
-    server.decorate('db', connection)
-    server.decorate('manager', connection.manager)
-    await server.listen(config.server.port, '127.0.0.1')
+    server.decorate('db', ds)
+    server.decorate('manager', ds.manager)
+    await server.listen({
+      port: config.server.port,
+      host: '127.0.0.1'
+    })
   })
   .catch((error) => console.log(error))

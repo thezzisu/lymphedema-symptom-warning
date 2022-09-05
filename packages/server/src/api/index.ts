@@ -48,7 +48,7 @@ export const API: FastifyPluginAsync = async (server) => {
     async (req) => {
       const { tel, code } = req.body
       if (verifyCode(tel, code)) {
-        let user = await server.manager.findOne(User, { tel })
+        let user = await server.manager.findOne(User, { where: { tel } })
         if (!user) {
           user = new User()
           user.tel = tel

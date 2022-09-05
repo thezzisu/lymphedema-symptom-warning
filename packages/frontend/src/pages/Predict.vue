@@ -39,6 +39,7 @@
 </template>
 
 <script setup lang="ts">
+import { addRecord, isLoggedIn } from '@/api'
 import { useAsyncTask } from '@/composables/async'
 import { Answer, models } from '@/core/model'
 import { taskMap, doTask, isTaskDone } from '@/core/task'
@@ -63,6 +64,21 @@ const { loading: predictLoading, run: predictRun } = useAsyncTask(async () => {
   const answer = toRaw(input.value)
   const result = model.predict(answer)
   const recordId = await addPredictRecord(modelId, answer, result)
+  try {
+    isLoggedIn.value && (await addRecord(recordId))
+    $q.notify({
+      color: 'positive',
+      message: '预测结果已保存',
+      timeout: 2000
+    })
+  } catch {
+    $q.notify({
+      color: 'negative',
+      message: '预测结果上传失败',
+      timeout: 2000
+    })
+  }
+
   const taskName = 'predict_' + modelId
   if (!isTaskDone(taskName)) {
     $q.dialog({
@@ -81,10 +97,5 @@ const { loading: predictLoading, run: predictRun } = useAsyncTask(async () => {
       $router.push({ name: 'result', params: { resultId: recordId } })
     )
   }
-  $q.notify({
-    color: 'positive',
-    message: '预测结果已保存',
-    timeout: 2000
-  })
 })
 </script>
