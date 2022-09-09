@@ -53,6 +53,7 @@ import { ref } from 'vue'
 
 const navItems = [
   { to: '/', label: '记录', icon: 'mdi-history' },
+  { to: '/tasks', label: '打卡', icon: 'mdi-calendar-check' },
   { to: '/predict', label: '预测', icon: 'mdi-calculator' },
   { to: '/articles', label: '知识', icon: 'mdi-book-open-page-variant' },
   { to: '/account', label: '账户', icon: 'mdi-account' }

@@ -27,7 +27,7 @@ export interface ContitionalCategory extends Category {
 }
 
 export class BCRLModel extends Model {
-  readonly name = 'BCRL风险预测模型'
+  readonly name = '淋巴水肿风险预测'
 
   private readonly variables = [
     ['BMI', '≥25', '<25', 0.738, 2, 1],
@@ -78,7 +78,7 @@ export class BCRLModel extends Model {
 }
 
 export class SymptomModel extends Model {
-  readonly name = '症状预测模型'
+  readonly name = '淋巴水肿症状预警'
 
   private readonly variables = [
     ['肩部有无活动受限', 0.202],

@@ -15,27 +15,54 @@
         </div>
       </div>
     </q-card-section>
-    <q-card-section class="row">
-      <template v-if="displayTasks.length">
-        <div v-for="task of displayTasks" class="col-xs-6 col-md-3 q-pa-sm">
-          <q-card
-            bordered
-            flat
-            class="column items-center q-pa-sm"
-            v-ripple
-            @click="router.push(task.to)"
-          >
-            <div>
-              <q-btn
-                round
-                :color="task.color"
-                :icon="task.icon"
-                outline
-                :ripple="false"
-              />
-            </div>
-            <div class="text-subtitle2">{{ task.label }}</div>
-          </q-card>
+    <q-separator />
+    <q-card-section>
+      <template v-if="tasks.reduce((acc, cur) => acc + cur.length, 0)">
+        <div class="text-h6 text-bold">风险预测</div>
+        <div class="row">
+          <div v-for="task of tasks[0]" class="col-xs-6 col-md-3 q-pa-sm">
+            <q-card
+              bordered
+              flat
+              class="column items-center q-pa-sm"
+              v-ripple
+              @click="router.push(task.to)"
+            >
+              <div>
+                <q-btn
+                  round
+                  :color="task.color"
+                  :icon="task.icon"
+                  outline
+                  :ripple="false"
+                />
+              </div>
+              <div class="text-h6">{{ task.label }}</div>
+            </q-card>
+          </div>
+        </div>
+        <div class="text-h6 text-bold">行为管理</div>
+        <div class="row">
+          <div v-for="task of tasks[1]" class="col-xs-6 col-md-3 q-pa-sm">
+            <q-card
+              bordered
+              flat
+              class="column items-center q-pa-sm"
+              v-ripple
+              @click="router.push(task.to)"
+            >
+              <div>
+                <q-btn
+                  round
+                  :color="task.color"
+                  :icon="task.icon"
+                  outline
+                  :ripple="false"
+                />
+              </div>
+              <div class="text-h6">{{ task.label }}</div>
+            </q-card>
+          </div>
         </div>
       </template>
       <template v-else>
@@ -60,14 +87,14 @@ const router = useRouter()
 const showDone = ref(false)
 
 const tasks = [
-  ...Object.entries(models).map(([id, model]) => ({
+  Object.entries(models).map(([id, model], i) => ({
     name: 'predict_' + id,
     label: '进行' + model.name + '预测',
-    icon: 'mdi-clipboard-check-outline',
+    icon: ['mdi-clipboard-check-outline', 'mdi-clipboard-alert-outline'][i],
     to: '/predict/' + id,
-    color: 'primary'
+    color: ['primary', 'accent'][i]
   })),
-  ...Object.entries(prescriptions).map(([id, prescription]) => ({
+  Object.entries(prescriptions).map(([id, prescription]) => ({
     name: 'prescription_' + id,
     label: prescription.name,
     icon: 'mdi-walk',
@@ -75,8 +102,4 @@ const tasks = [
     color: 'positive'
   }))
 ]
-
-const displayTasks = computed(() =>
-  tasks.filter((task) => isTaskDone(task.name) === showDone.value)
-)
 </script>

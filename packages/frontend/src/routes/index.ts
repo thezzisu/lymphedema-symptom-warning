@@ -10,6 +10,7 @@ import Login from '@/pages/Login.vue'
 import Profile from '@/pages/Profile.vue'
 import NotFound from '@/pages/NotFound.vue'
 import Prescription from '@/pages/Prescription.vue'
+import Tasks from '@/pages/Tasks.vue'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -18,6 +19,11 @@ const router = createRouter({
       name: 'index',
       path: '/',
       component: Index
+    },
+    {
+      name: 'tasks',
+      path: '/tasks',
+      component: Tasks
     },
     {
       name: 'models',
