@@ -7,12 +7,12 @@ export const APIAdmin: FastifyPluginAsync = async (server) => {
     if (!req.ctx.user.admin) throw server.httpErrors.forbidden()
   })
 
-  server.get('/users', async () => {
+  server.get('/export_users', async () => {
     const users = await server.manager.find(User)
     return users
   })
 
-  server.get('/export', async () => {
+  server.get('/export_records', async () => {
     const records = await server.manager.find(PredictRecord)
     return records
   })
