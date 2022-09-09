@@ -7,11 +7,9 @@ import { APIUser } from './user'
 import { config } from '../util/config'
 import axios from 'axios'
 import { URLSearchParams } from 'url'
-import { APIAdmin } from './admin'
 
 export const API: FastifyPluginAsync = async (server) => {
   server.register(APIUser, { prefix: '/user' })
-  server.register(APIAdmin, { prefix: '/admin' })
 
   const verifySchema = Type.Object({
     tel: Type.String({ minLength: 11, maxLength: 11 }),
