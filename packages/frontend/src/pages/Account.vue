@@ -15,10 +15,12 @@
               </q-item-section>
             </q-item>
 
-            <q-item tag="label" clickable to="/about">
+            <q-item tag="label">
               <q-item-section>
                 <q-item-label>关于</q-item-label>
-                <q-item-label caption>lsw-frontend {{ version }}</q-item-label>
+                <q-item-label caption>
+                  淋巴水肿筛查工具 {{ version }}
+                </q-item-label>
               </q-item-section>
             </q-item>
           </q-list>

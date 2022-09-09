@@ -11,6 +11,7 @@ import Profile from '@/pages/Profile.vue'
 import NotFound from '@/pages/NotFound.vue'
 import Prescription from '@/pages/Prescription.vue'
 import Tasks from '@/pages/Tasks.vue'
+import Eula from '@/pages/Eula.vue'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -73,6 +74,11 @@ const router = createRouter({
       name: 'profile',
       path: '/profile',
       component: Profile
+    },
+    {
+      name: 'eula',
+      path: '/eula',
+      component: Eula
     },
     {
       name: 'notFound',

@@ -17,7 +17,7 @@
     </q-card-section>
     <q-separator inset />
     <q-card-section v-if="records.length">
-      <results-graph :records="records" />
+      <result-summary />
       <q-separator />
       <q-list separator>
         <result-embed
@@ -43,7 +43,7 @@
 <script setup lang="ts">
 import { getPredictRecords } from '@/db'
 import ResultEmbed from './ResultEmbed.vue'
-import ResultsGraph from './ResultsGraph.vue'
+import ResultSummary from './ResultSummary.vue'
 
 const records = await getPredictRecords()
 </script>
