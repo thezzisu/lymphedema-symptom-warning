@@ -23,6 +23,7 @@ export function content(): Plugin {
         id: basename(path, '.md'),
         html: marked(body)
       }))
+      .reverse()
     console.log(`[content] found ${records.length} articles`)
     return `export default ${JSON.stringify(records, null, 2)}`
   }
