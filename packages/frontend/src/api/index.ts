@@ -87,3 +87,13 @@ export async function addRecord(recordId: number) {
   })
   await db.predictRecords.update(record.localId, { id: res.data, synced: true })
 }
+
+export async function exportUsers() {
+  const res = await axios.get('/user/admin/export_users')
+  return res.data
+}
+
+export async function exportRecords() {
+  const res = await axios.get('/user/admin/export_records')
+  return res.data
+}
