@@ -6,12 +6,7 @@
           <div class="text-h5">预测历史</div>
         </div>
         <div class="col-auto">
-          <q-btn
-            color="primary"
-            icon="mdi-plus"
-            label="开始预测"
-            to="/predict"
-          />
+          <q-btn color="primary" icon="mdi-plus" label="开始预测" to="/tasks" />
         </div>
       </div>
     </q-card-section>
