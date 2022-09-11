@@ -5,7 +5,9 @@
         <q-card>
           <q-card-section>
             <div class="text-h5">行为建议：{{ prescription.name }}</div>
-            <div>{{ prescription.description }}</div>
+            <div style="white-space: pre-wrap">
+              {{ prescription.description }}
+            </div>
           </q-card-section>
           <q-separator inset />
           <q-card-actions>

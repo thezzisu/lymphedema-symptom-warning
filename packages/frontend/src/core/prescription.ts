@@ -23,7 +23,7 @@ export const prescriptions: Record<string, Prescription> = Object.fromEntries(
     new (createPrescription('保持清洁', '请保持患侧手臂清洁，滋润。'))(),
     new (createPrescription(
       '保护患肢',
-      '您应该在日常生活中避免以下行为：\r\n避免用患侧手臂进行剧烈、重复的运动\r\n避免患侧受热或被用力按摩，如避免洗澡、洗碗时避免过冷或过热\r\n避免穿过紧的衣服、首饰\r\n避免任何类型的创伤，如避免患侧手臂接种疫苗、注射、抽血、输液、测血压、推拿、拔罐等。'
+      '您应该在日常生活中避免以下行为：\n避免用患侧手臂进行剧烈、重复的运动\n避免患侧受热或被用力按摩，如避免洗澡、洗碗时避免过冷或过热\n避免穿过紧的衣服、首饰\n避免任何类型的创伤，如避免患侧手臂接种疫苗、注射、抽血、输液、测血压、推拿、拔罐等。'
     ))(),
     new (createPrescription(
       '合理膳食',
