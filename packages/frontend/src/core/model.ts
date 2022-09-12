@@ -30,15 +30,15 @@ export class BCRLModel extends Model {
   readonly name = '淋巴水肿风险预测'
 
   private readonly variables = [
-    ['BMI', '≥25', '<25', 0.738, 2, 1],
-    ['高血压', '是', '否', 0.786, 2, 1],
-    ['肿瘤分期', 'III', 'I或II', 0.625, 2, 1],
-    ['乳房手术类型', '全乳切除', '肿物切除', 0.311, 2, 1],
-    ['腋窝手术类型', 'ALND', 'SLNB', 1.117, 3, 1],
-    ['淋巴结清扫数量', '≥10', '<10', 0.365, 2, 1],
-    ['新辅助化疗', '是', '否', 0.793, 2, 1],
-    ['放疗', '是', '否', 0.687, 2, 1],
-    ['术后并发症', '是', '否', 0.715, 2, 1]
+    ['BMI', '≥25', '<25', 0.575, 2, 1],
+    ['高血压', '是', '否', 0, 2, 1],
+    ['肿瘤分期', 'III', 'I或II', 0, 2, 1],
+    ['乳房手术类型', '全乳切除', '肿物切除', 0.278, 2, 1],
+    ['腋窝手术类型', 'ALND', 'SLNB', 1.118, 3, 1],
+    ['淋巴结清扫数量', '≥10', '<10', 0, 2, 1],
+    ['新辅助化疗', '是', '否', 0, 2, 1],
+    ['放疗', '是', '否', 0.482, 2, 1],
+    ['术后并发症', '是', '否', 0.864, 2, 1]
   ] as const
 
   private readonly categories: readonly ContitionalCategory[] = [
@@ -69,7 +69,7 @@ export class BCRLModel extends Model {
     const [sum, score] = answer
       .map((x, i) => ((v) => (x ? [v[3], v[4]] : [0, v[5]]))(this.variables[i]))
       .reduce(([a, b], [c, d]) => [a + c, b + d])
-    return [sigmoid(sum + -1.2715), score]
+    return [sigmoid(sum + -1.349), score]
   }
 
   getCategory(result: Result) {
