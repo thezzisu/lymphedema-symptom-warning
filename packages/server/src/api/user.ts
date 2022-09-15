@@ -98,23 +98,19 @@ export const APIUser: FastifyPluginAsync = async (server) => {
   const updateProfileSchema = Type.Object({
     nickname: Type.String({ minLength: 1, maxLength: 20 }),
     realname: Type.String({ minLength: 1, maxLength: 20 }),
-    age: Type.Number({ minimum: 1, maximum: 120 })
+    age: Type.Number({ minimum: 1, maximum: 120 }),
+    isHighRisk: Type.Boolean()
   })
   server.patch<W<typeof updateProfileSchema>>(
     '/profile',
     { schema: { body: updateProfileSchema } },
     async (req) => {
       const { user } = req.ctx
-      const { nickname, realname, age } = req.body
-      if (nickname) {
-        user.nickname = nickname
-      }
-      if (realname) {
-        user.realname = realname
-      }
-      if (age) {
-        user.age = age
-      }
+      const { nickname, realname, age, isHighRisk } = req.body
+      user.nickname = user.nickname ?? nickname
+      user.realname = realname ?? user.realname
+      user.age = age ?? user.age
+      user.isHighRisk = isHighRisk ?? user.isHighRisk
       await server.manager.save(user)
       return 1
     }

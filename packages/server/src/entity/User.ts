@@ -21,6 +21,9 @@ export class User {
   @Column({ default: false })
   admin: boolean
 
+  @Column({ default: false })
+  isHighRisk: boolean
+
   @OneToMany(() => PredictRecord, (record) => record.user)
   records: PredictRecord[]
 }
