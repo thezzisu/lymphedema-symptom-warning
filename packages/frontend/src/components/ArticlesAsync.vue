@@ -1,18 +1,24 @@
 <template>
-  <div class="row justify-center" v-for="(article, i) in articles" :key="i">
-    <div class="col-12 q-pa-sm">
-      <q-card
-        v-ripple
-        class="q-hoverable cursor-pointer"
-        @click="gotoArticle(article.id)"
-      >
-        <div tabindex="-1" class="q-focus-helper"></div>
-        <q-img :src="article.cover">
-          <div class="absolute-bottom text-h6">{{ article.title }}</div>
-        </q-img>
-        <q-card-section v-if="article.summary">
-          {{ article.summary }}
-        </q-card-section>
+  <div class="row justify-center">
+    <div class="col-12">
+      <q-card>
+        <q-list bordered class="rounded-borders">
+          <q-expansion-item
+            v-for="c of categories"
+            expand-separator
+            :label="c.name"
+          >
+            <q-card>
+              <q-list>
+                <q-item v-for="a of c.articles" :to="`/article/${a.id}`">
+                  <q-item-section>
+                    <q-item-label>{{ a.title }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-card>
+          </q-expansion-item>
+        </q-list>
       </q-card>
     </div>
   </div>
@@ -23,6 +29,16 @@ import { getArticles } from '@/core/articles'
 import { useRouter } from 'vue-router'
 
 const articles = await getArticles()
+const categories = [
+  '了解淋巴水肿',
+  '居家自我监测',
+  '基础预防管理',
+  '高危预防管理',
+  '治疗资源及途径'
+].map((name, index) => ({
+  name,
+  articles: articles.filter((article) => article.id.startsWith(`${index + 1}_`))
+}))
 const router = useRouter()
 
 function gotoArticle(articleId: string) {

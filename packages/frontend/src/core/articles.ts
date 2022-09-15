@@ -1,8 +1,6 @@
 export interface IArticle {
   id: string
   title: string
-  cover: string
-  summary: string
   html: string
 }
 
