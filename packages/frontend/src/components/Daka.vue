@@ -10,43 +10,81 @@
     <q-separator />
     <q-card-section>
       <div class="text-h6 text-bold">风险预测</div>
-      <div class="row">
-        <div v-for="task of tasks[0]" class="col-xs-6 col-md-3 q-pa-sm">
-          <task-item :task="task" />
-        </div>
-      </div>
-      <div class="text-h6 text-bold">行为管理</div>
-      <div class="row">
-        <div v-for="task of tasks[1]" class="col-xs-6 col-md-3 q-pa-sm">
-          <task-item :task="task" />
-        </div>
-      </div>
+      <q-separator />
+      <q-list>
+        <task-item v-for="task of tasks[0]" :task="task" />
+      </q-list>
     </q-card-section>
+    <q-separator />
+    <q-card-section>
+      <div class="text-h6 text-bold">基础预防管理</div>
+      <div>
+        请先在<b>知识</b>分区学习<b>基础预防管理</b>分类下的文章，再完成下列预防任务。
+      </div>
+      <q-separator />
+      <q-list>
+        <task-item v-for="task of tasks[1]" :task="task" @done="update" />
+      </q-list>
+    </q-card-section>
+    <template v-if="apiUser.isHighRisk">
+      <q-separator />
+      <q-card-section>
+        <div class="text-h6 text-bold">高危预防管理</div>
+        <div>
+          请先在<b>知识</b>分区学习<b>高危预防管理</b>分类下的文章，再完成下列预防任务。
+        </div>
+        <q-separator />
+        <q-list>
+          <task-item v-for="task of tasks[2]" :task="task" @done="update" />
+        </q-list>
+      </q-card-section>
+    </template>
   </q-card>
 </template>
 
 <script setup lang="ts">
+import { apiUser } from '@/api'
 import TaskItem from '@/components/TaskItem.vue'
 import { models } from '@/core/model'
-import { prescriptions } from '@/core/prescription'
 import { getDoneTs } from '@/core/task'
+import { ref } from 'vue'
 
-const tasks = [
-  Object.entries(models).map(([id, model], i) => ({
-    name: 'predict_' + id,
-    label: '进行' + model.name,
-    icon: ['mdi-clipboard-check-outline', 'mdi-clipboard-alert-outline'][i],
-    to: '/predict/' + id,
-    color: ['primary', 'accent'][i],
-    done: getDoneTs('predict_' + id)
-  })),
-  Object.entries(prescriptions).map(([id, prescription]) => ({
-    name: 'prescription_' + id,
-    label: prescription.name,
-    icon: 'mdi-walk',
-    to: '/prescription/' + id,
-    color: 'amber',
-    done: getDoneTs('prescription_' + id)
-  }))
-]
+function generateTasks() {
+  return [
+    Object.entries(models).map(([id, model], i) => ({
+      name: 'predict_' + id,
+      label: '进行' + model.name,
+      icon: ['mdi-clipboard-check-outline', 'mdi-clipboard-alert-outline'][i],
+      to: '/predict/' + id,
+      color: ['primary', 'accent'][i],
+      done: getDoneTs('predict_' + id)
+    })),
+    [
+      '定期自我监测',
+      '坚持功能锻炼',
+      '注意患肢保护',
+      '做好皮肤护理',
+      '生活方式管理'
+    ].map((name, id) => ({
+      name: 'common_' + id,
+      label: name,
+      icon: 'mdi-walk',
+      color: 'amber',
+      done: getDoneTs('common_' + id)
+    })),
+    ['高危预防'].map((name, id) => ({
+      name: 'highrisk_' + id,
+      label: name,
+      icon: 'mdi-walk',
+      color: 'amber',
+      done: getDoneTs('highrisk_' + id)
+    }))
+  ]
+}
+
+const tasks = ref(generateTasks())
+
+function update() {
+  tasks.value = generateTasks()
+}
 </script>

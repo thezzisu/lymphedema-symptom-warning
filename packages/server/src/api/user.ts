@@ -96,10 +96,10 @@ export const APIUser: FastifyPluginAsync = async (server) => {
   )
 
   const updateProfileSchema = Type.Object({
-    nickname: Type.String({ minLength: 1, maxLength: 20 }),
-    realname: Type.String({ minLength: 1, maxLength: 20 }),
-    age: Type.Number({ minimum: 1, maximum: 120 }),
-    isHighRisk: Type.Boolean()
+    nickname: Type.Optional(Type.String({ minLength: 1, maxLength: 20 })),
+    realname: Type.Optional(Type.String({ minLength: 1, maxLength: 20 })),
+    age: Type.Optional(Type.Number({ minimum: 1, maximum: 120 })),
+    isHighRisk: Type.Optional(Type.Boolean())
   })
   server.patch<W<typeof updateProfileSchema>>(
     '/profile',

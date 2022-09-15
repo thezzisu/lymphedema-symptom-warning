@@ -44,6 +44,7 @@ import { useAsyncTask } from '@/composables/async'
 import { Answer, models } from '@/core/model'
 import { taskMap, doTask, isTaskDone } from '@/core/task'
 import { addPredictRecord } from '@/db'
+import axios from 'axios'
 import { useQuasar } from 'quasar'
 import { nextTick, ref, toRaw } from 'vue'
 import { useRouter } from 'vue-router'
@@ -63,12 +64,22 @@ const input = ref<Answer>(parameters.map(() => 0))
 const { loading: predictLoading, run: predictRun } = useAsyncTask(async () => {
   const answer = toRaw(input.value)
   const result = model.predict(answer)
-  const recordId = await addPredictRecord(modelId, answer, result)
   if (isLoggedIn.value && modelId === 'bcrl') {
     // 风险预测，计算危险级别
     const isHighRisk = model.getCategory(result).label === '高危'
+    try {
+      await axios.patch('/user/profile', { isHighRisk })
+    } catch {
+      $q.notify({
+        color: 'negative',
+        message: '网络错误，无法更新风险等级',
+        timeout: 2000
+      })
+      return
+    }
     apiUser.value.isHighRisk = isHighRisk
   }
+  const recordId = await addPredictRecord(modelId, answer, result)
   try {
     isLoggedIn.value && (await addRecord(recordId))
     $q.notify({

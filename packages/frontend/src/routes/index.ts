@@ -9,7 +9,6 @@ import Account from '@/pages/Account.vue'
 import Login from '@/pages/Login.vue'
 import Profile from '@/pages/Profile.vue'
 import NotFound from '@/pages/NotFound.vue'
-import Prescription from '@/pages/Prescription.vue'
 import Tasks from '@/pages/Tasks.vue'
 import Eula from '@/pages/Eula.vue'
 import { isLoggedIn } from '@/api'
@@ -42,12 +41,6 @@ const router = createRouter({
       name: 'result',
       path: '/result/:resultId',
       component: Result,
-      props: true
-    },
-    {
-      name: 'prescription',
-      path: '/prescription/:prescriptionId',
-      component: Prescription,
       props: true
     },
     {
