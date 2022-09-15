@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { addRecord, isLoggedIn } from '@/api'
+import { addRecord, apiUser, isLoggedIn } from '@/api'
 import { useAsyncTask } from '@/composables/async'
 import { Answer, models } from '@/core/model'
 import { taskMap, doTask, isTaskDone } from '@/core/task'
@@ -64,6 +64,11 @@ const { loading: predictLoading, run: predictRun } = useAsyncTask(async () => {
   const answer = toRaw(input.value)
   const result = model.predict(answer)
   const recordId = await addPredictRecord(modelId, answer, result)
+  if (isLoggedIn.value && modelId === 'bcrl') {
+    // 风险预测，计算危险级别
+    const isHighRisk = model.getCategory(result).label === '高危'
+    apiUser.value.isHighRisk = isHighRisk
+  }
   try {
     isLoggedIn.value && (await addRecord(recordId))
     $q.notify({

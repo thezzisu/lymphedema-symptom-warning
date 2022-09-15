@@ -12,6 +12,7 @@ import NotFound from '@/pages/NotFound.vue'
 import Prescription from '@/pages/Prescription.vue'
 import Tasks from '@/pages/Tasks.vue'
 import Eula from '@/pages/Eula.vue'
+import { isLoggedIn } from '@/api'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -86,6 +87,16 @@ const router = createRouter({
       component: NotFound
     }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  if (isLoggedIn.value) {
+    return next()
+  }
+  if (to.name === 'login') {
+    return next()
+  }
+  return next({ name: 'login' })
 })
 
 export default router

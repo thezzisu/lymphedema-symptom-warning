@@ -11,9 +11,9 @@
       </div>
     </q-card-section>
     <q-separator inset />
+    <result-summary />
+    <q-separator />
     <q-card-section v-if="records.length">
-      <result-summary />
-      <q-separator />
       <q-list separator>
         <result-embed
           v-for="(record, i) in records"

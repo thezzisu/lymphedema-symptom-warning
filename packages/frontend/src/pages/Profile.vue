@@ -14,6 +14,7 @@
             <q-input label="昵称" v-model="copy.nickname" />
             <q-input label="姓名" v-model="copy.realname" />
             <q-input label="年龄" v-model="copy.age" type="number" />
+            <q-toggle label="高风险" v-model="copy.isHighRisk" />
           </q-card-section>
           <q-card-actions align="right">
             <q-btn color="negative" label="取消修改" @click="discard" />

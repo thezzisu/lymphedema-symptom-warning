@@ -12,6 +12,7 @@ interface IUser {
   realname: string
   age: number
   admin: boolean
+  isHighRisk: boolean
 }
 
 export const apiToken = useLocalStorage('token', '')
@@ -42,6 +43,7 @@ export async function login(tel: string, code: string) {
   const { user, jwt } = res.data
   apiUser.value = user
   apiToken.value = jwt
+  axios.defaults.headers.common['Authorization'] = `Bearer ${jwt}`
 }
 
 export async function logout() {

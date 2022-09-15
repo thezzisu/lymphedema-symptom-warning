@@ -1,3 +1,4 @@
+import { apiUser } from '@/api'
 import { useLocalStorage } from '@vueuse/core'
 import { computed } from 'vue'
 
@@ -17,21 +18,23 @@ export function isTaskDone(id: string) {
   const ts = new Date(taskMap.value[id] ?? 0)
   const now = new Date()
   if (id === 'predict_symptom') {
-    // Once per week
-    return (
-      ts.getFullYear() === now.getFullYear() &&
-      ts.getMonth() === now.getMonth() &&
-      ts.getDate() - ts.getDay() === now.getDate() - now.getDay()
-    )
-  }
-  if (id === 'predict_bcrl') {
-    // Once per month
-    if ([1, 3, 6, 12].includes(now.getMonth() + 1)) {
+    if(apiUser.value.isHighRisk) {
+      // Once per week if high risk
+      return (
+        ts.getFullYear() === now.getFullYear() &&
+        ts.getMonth() === now.getMonth() &&
+        ts.getDate() - ts.getDay() === now.getDate() - now.getDay()
+      )
+    }else{
+      // Once per month
       return (
         ts.getFullYear() === now.getFullYear() &&
         ts.getMonth() === now.getMonth()
       )
     }
+  }
+  if (id === 'predict_bcrl') {
+    // Once
     return true
   }
   // Once a day
