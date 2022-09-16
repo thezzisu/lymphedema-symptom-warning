@@ -26,7 +26,7 @@ export interface IOperationRecord<T extends OperationType = never> {
 }
 
 class AppDatabase extends Dexie {
-  static DB_VERSION = 1
+  static DB_VERSION = 2
   predictRecords: Dexie.Table<IPredictRecord, number>
   operationRecords: Dexie.Table<IOperationRecord, number>
 
