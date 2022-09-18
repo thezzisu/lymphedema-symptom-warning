@@ -72,7 +72,7 @@ function generateTasks() {
       color: 'amber',
       done: getDoneTs('common_' + id)
     })),
-    ['高危预防'].map((name, id) => ({
+    ['淋巴回流操', '手法淋巴引流', '佩戴弹力袖套'].map((name, id) => ({
       name: 'highrisk_' + id,
       label: name,
       icon: 'mdi-walk',
