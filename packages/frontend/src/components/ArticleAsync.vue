@@ -22,7 +22,7 @@ const props = defineProps<{
 const article = await getArticle(props.articleId)
 </script>
 
-<style scoped>
+<style>
 .lsw-article {
   overflow: hidden;
 }
