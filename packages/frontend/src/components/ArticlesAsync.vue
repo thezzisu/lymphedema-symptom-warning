@@ -7,12 +7,15 @@
             v-for="c of categories"
             expand-separator
             :label="c.name"
+            class="text-h6"
           >
             <q-card>
               <q-list>
                 <q-item v-for="a of c.articles" :to="`/article/${a.id}`">
                   <q-item-section>
-                    <q-item-label>{{ a.title }}</q-item-label>
+                    <q-item-label class="q-pl-lg text-subtitle1">
+                      {{ a.title }}
+                    </q-item-label>
                   </q-item-section>
                 </q-item>
               </q-list>
