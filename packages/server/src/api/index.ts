@@ -20,17 +20,20 @@ export const API: FastifyPluginAsync = async (server) => {
     '/verify',
     { schema: { body: verifySchema } },
     async (req) => {
-      // Verify using google recaptcha
       const { tel, response } = req.body
-      const params = new URLSearchParams({
-        secret: config.recaptcha.secret,
-        response
-      })
-      const res = await axios.post<{ success: boolean }>(
-        'https://www.google.com/recaptcha/api/siteverify',
-        params.toString()
-      )
-      if (!res.data.success) throw server.httpErrors.forbidden()
+
+      if (config.recaptcha.enabled) {
+        // Verify using google recaptcha
+        const params = new URLSearchParams({
+          secret: config.recaptcha.secret,
+          response
+        })
+        const res = await axios.post<{ success: boolean }>(
+          'https://www.google.com/recaptcha/api/siteverify',
+          params.toString()
+        )
+        if (!res.data.success) throw server.httpErrors.forbidden()
+      }
 
       await sendCode(tel)
       return 1
