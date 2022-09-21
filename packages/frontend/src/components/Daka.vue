@@ -18,9 +18,9 @@
     <q-separator />
     <q-card-section>
       <div class="text-h6 text-bold">基础预防管理</div>
-      <div>
+      <div class="text-subtitle1">
         请先在<b>知识</b>分区学习<b>基础预防管理</b>分类下的文章，再完成下列预防任务。
-        <br/>
+        <br />
         您可以通过点击完成相应项目的打卡。
       </div>
       <q-separator />
@@ -32,9 +32,9 @@
       <q-separator />
       <q-card-section>
         <div class="text-h6 text-bold">高危预防管理</div>
-        <div>
+        <div class="text-subtitle1">
           请先在<b>知识</b>分区学习<b>高危预防管理</b>分类下的文章，再完成下列预防任务。
-          <br/>
+          <br />
           您可以通过点击完成相应项目的打卡。
         </div>
         <q-separator />

@@ -29,7 +29,6 @@
 
 <script setup lang="ts">
 import { getArticles } from '@/core/articles'
-import { useRouter } from 'vue-router'
 
 const articles = await getArticles()
 const categories = [
@@ -42,9 +41,4 @@ const categories = [
   name,
   articles: articles.filter((article) => article.id.startsWith(`${index + 1}_`))
 }))
-const router = useRouter()
-
-function gotoArticle(articleId: string) {
-  router.push({ name: 'article', params: { articleId } })
-}
 </script>

@@ -10,14 +10,14 @@
           <q-card-section>
             <q-input label="手机" name="phone" type="tel" v-model="tel" />
           </q-card-section>
-          <q-card-section class="row justify-center">
+          <!-- <q-card-section class="row justify-center">
             <vue-recaptcha
               :sitekey="siteKey"
               @verify="onVerify"
               load-recaptcha-script
               recaptchaHost="www.recaptcha.net"
             />
-          </q-card-section>
+          </q-card-section> -->
           <q-card-section v-show="!!response">
             <div class="row items-end">
               <div class="col">
