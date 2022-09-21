@@ -37,6 +37,7 @@ export async function sendCode(tel: string) {
 }
 
 export async function verifyCode(tel: string, code: string) {
+  if(!code)return false
   const ans = cache.take(tel)
   return ans === code
 }

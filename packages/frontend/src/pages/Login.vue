@@ -18,7 +18,8 @@
               recaptchaHost="www.recaptcha.net"
             />
           </q-card-section> -->
-          <q-card-section v-show="!!response">
+          <!-- <q-card-section v-show="!!response"> -->
+          <q-card-section>
             <div class="row items-end">
               <div class="col">
                 <q-input label="验证码" name="code" v-model="code" />
