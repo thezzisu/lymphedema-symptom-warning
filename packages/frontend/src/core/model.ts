@@ -44,14 +44,16 @@ export class BCRLModel extends Model {
   private readonly categories: readonly ContitionalCategory[] = [
     {
       label: '低危',
-      suggestion: '推荐继续保持',
+      suggestion:
+        '请您做好淋巴水肿基础预防管理，每月按时进行淋巴水肿症状预警评估',
       icon: 'mdi-check-circle',
       color: 'positive',
       cond: (r) => r[1] < 14.5
     },
     {
       label: '高危',
-      suggestion: '推荐立即治疗',
+      suggestion:
+        '请您做好淋巴水肿基础预防管理和高危预防管理，立即进行淋巴水肿症状预警评估，并坚持每周评估一次',
       icon: 'mdi-alert-circle',
       color: 'negative',
       cond: (r) => r[1] >= 14.5
@@ -105,21 +107,22 @@ export class SymptomModel extends Model {
   private readonly categories: readonly ContitionalCategory[] = [
     {
       label: '低风险',
-      suggestion: '推荐继续保持',
+      suggestion:
+        '请您继续保持，做好淋巴水肿预防管理，按时进行淋巴水肿症状预警评估',
       icon: 'mdi-check-circle',
       color: 'positive',
       cond: (r) => r[0] <= 0.15
     },
     {
       label: '中风险',
-      suggestion: '推荐观察身体情况',
+      suggestion: '请您立即就医，做好淋巴水肿基础预防管理和高危预防管理',
       icon: 'mdi-information',
       color: 'warning',
       cond: (r) => r[0] <= 0.5
     },
     {
       label: '高风险',
-      suggestion: '推荐立即就医',
+      suggestion: '请您立即就医，做好淋巴水肿基础预防管理和高危预防管理',
       icon: 'mdi-alert-circle',
       color: 'negative',
       cond: (r) => r[0] > 0.5

@@ -36,7 +36,7 @@
     <q-separator inset />
     <q-card-section>
       <div class="text-h6">建议</div>
-      <div>{{ category.suggestion }}</div>
+      <div class="text-subtitle1">{{ category.suggestion }}</div>
     </q-card-section>
     <q-separator inset />
     <q-card-actions align="right">
