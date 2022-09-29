@@ -11,6 +11,8 @@
     <template v-if="apiUser.admin">
       <q-separator />
       <q-card-actions align="right">
+        <q-btn outline label="发送高危通知" @click="notifyHighRisk" />
+        <q-btn outline label="发送低危通知" @click="notifyLowRisk" />
         <q-btn outline label="导出用户" @click="doExportUsers" />
         <q-btn outline label="导出记录" @click="doExportRecords" />
       </q-card-actions>
@@ -24,7 +26,9 @@ import {
   logout,
   updateProfile,
   exportUsers,
-  exportRecords
+  exportRecords,
+  notifyHighRisk,
+  notifyLowRisk
 } from '@/api'
 import { useQuasar } from 'quasar'
 import { nextTick } from 'vue'

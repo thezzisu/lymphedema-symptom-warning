@@ -101,3 +101,13 @@ export async function exportRecords() {
   const res = await axios.get('/user/admin/export_records')
   return res.data
 }
+
+export async function notifyHighRisk() {
+  const res = await axios.post('/user/admin/notify_high_risk')
+  return res.data
+}
+
+export async function notifyLowRisk() {
+  const res = await axios.post('/user/admin/notify_low_risk')
+  return res.data
+}

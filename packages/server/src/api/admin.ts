@@ -1,4 +1,5 @@
 import { FastifyPluginAsync } from 'fastify'
+import { notifyHighRisk, notifyLowRisk } from '../cron'
 import { PredictRecord } from '../entity/Record'
 import { User } from '../entity/User'
 
@@ -15,5 +16,15 @@ export const APIAdmin: FastifyPluginAsync = async (server) => {
   server.get('/export_records', async () => {
     const records = await server.manager.find(PredictRecord)
     return records
+  })
+
+  server.post('/notify_high_risk', async () => {
+    await notifyHighRisk(server.manager)
+    return 1
+  })
+
+  server.post('/notify_low_risk', async () => {
+    await notifyLowRisk(server.manager)
+    return 1
   })
 }
