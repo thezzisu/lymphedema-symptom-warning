@@ -99,7 +99,9 @@ export const APIUser: FastifyPluginAsync = async (server) => {
     nickname: Type.Optional(Type.String({ minLength: 1, maxLength: 20 })),
     realname: Type.Optional(Type.String({ minLength: 1, maxLength: 20 })),
     age: Type.Optional(Type.Number({ minimum: 1, maximum: 120 })),
-    isHighRisk: Type.Optional(Type.Boolean())
+    isHighRisk: Type.Optional(Type.Boolean()),
+    noNotification: Type.Optional(Type.Boolean()),
+    lastPredictTime: Type.Optional(Type.Number())
   })
   server.patch<W<typeof updateProfileSchema>>(
     '/profile',
@@ -111,6 +113,8 @@ export const APIUser: FastifyPluginAsync = async (server) => {
       user.realname = realname ?? user.realname
       user.age = age ?? user.age
       user.isHighRisk = isHighRisk ?? user.isHighRisk
+      user.noNotification = req.body.noNotification ?? user.noNotification
+      user.lastPredictTime = req.body.lastPredictTime ?? user.lastPredictTime
       await server.manager.save(user)
       return 1
     }

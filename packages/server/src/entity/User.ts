@@ -24,6 +24,12 @@ export class User {
   @Column({ default: false })
   isHighRisk: boolean
 
+  @Column({ default: false })
+  noNotification: boolean
+
+  @Column({ default: 0 })
+  lastPredictTime: number
+
   @OneToMany(() => PredictRecord, (record) => record.user)
   records: PredictRecord[]
 }

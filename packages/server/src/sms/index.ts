@@ -30,7 +30,7 @@ export async function sendCode(tel: string) {
       SmsSdkAppId: config.sms.appId,
       PhoneNumberSet: ['+86' + tel],
       SignName: config.sms.signName,
-      TemplateId: config.sms.templateId,
+      TemplateId: config.sms.templateId.captcha,
       TemplateParamSet: [code]
     })
   }
@@ -40,4 +40,16 @@ export async function verifyCode(tel: string, code: string) {
   if(!code)return false
   const ans = cache.take(tel)
   return ans === code
+}
+
+export async function sendNotification(tel: string, content: string) {
+  if (config.sms.enabled) {
+    await client.SendSms({
+      SmsSdkAppId: config.sms.appId,
+      PhoneNumberSet: ['+86' + tel],
+      SignName: config.sms.signName,
+      TemplateId: config.sms.templateId.notify,
+      TemplateParamSet: [content]
+    })
+  }
 }

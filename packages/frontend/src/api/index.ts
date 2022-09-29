@@ -13,6 +13,8 @@ interface IUser {
   age: number
   admin: boolean
   isHighRisk: boolean
+  noNotification: boolean
+  lastPredictTime: number
 }
 
 export const apiToken = useLocalStorage('token', '')

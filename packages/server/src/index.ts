@@ -10,6 +10,7 @@ import { API } from './api'
 import { config } from './util/config'
 import { User } from './entity/User'
 import { PredictRecord } from './entity/Record'
+import { startCron } from './cron'
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -61,5 +62,6 @@ dataSource
       port: config.server.port,
       host: '127.0.0.1'
     })
+    startCron(ds)
   })
   .catch((error) => console.log(error))
