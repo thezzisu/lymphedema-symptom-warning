@@ -1,5 +1,5 @@
 import * as schedule from 'node-schedule'
-import { DataSource, EntityManager, MoreThan } from 'typeorm'
+import { DataSource, EntityManager, LessThan } from 'typeorm'
 import { User } from '../entity/User'
 import { sendNotification } from '../sms'
 
@@ -15,7 +15,7 @@ export async function notifyHighRisk(manager: EntityManager) {
   const target = await manager.find(User, {
     where: {
       isHighRisk: true,
-      lastPredictTime: MoreThan(startOfWeek.getTime()),
+      lastPredictTime: LessThan(startOfWeek.getTime()),
       noNotification: false
     }
   })
@@ -38,7 +38,7 @@ export async function notifyLowRisk(manager: EntityManager) {
   const target = await manager.find(User, {
     where: {
       isHighRisk: false,
-      lastPredictTime: MoreThan(startOfMonth.getTime()),
+      lastPredictTime: LessThan(startOfMonth.getTime()),
       noNotification: false
     }
   })
