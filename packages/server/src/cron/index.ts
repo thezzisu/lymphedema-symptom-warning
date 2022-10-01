@@ -54,11 +54,11 @@ export async function notifyLowRisk(manager: EntityManager) {
 export function startCron(ds: DataSource) {
   const manager = ds.manager
 
-  schedule.scheduleJob('* * * * * 6', () => {
+  schedule.scheduleJob('0 0 12 * * 6', () => {
     notifyHighRisk(manager).catch(console.log.bind(console))
   })
 
-  schedule.scheduleJob('* * * 27 * *', () => {
+  schedule.scheduleJob('0 0 12 27 * *', () => {
     notifyLowRisk(manager).catch(console.log.bind(console))
   })
 }
